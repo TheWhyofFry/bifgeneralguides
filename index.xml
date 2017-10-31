@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>General BIF guides</title>
+    <link>https://thewhyoffry.github.io/bifgeneralguides/</link>
+    <description>Recent content on General BIF guides</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 31 Oct 2017 08:22:40 +0200</lastBuildDate>
+    
+	<atom:link href="https://thewhyoffry.github.io/bifgeneralguides/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Prepping Phylogenetic Data With BASH</title>
+      <link>https://thewhyoffry.github.io/bifgeneralguides/bash/bashphylo/</link>
+      <pubDate>Tue, 31 Oct 2017 08:22:40 +0200</pubDate>
+      
+      <guid>https://thewhyoffry.github.io/bifgeneralguides/bash/bashphylo/</guid>
+      <description>Introduction General usage of shell environments are restricted to executing simple commands to complete tasks. So
+Some of the previous demonstrations have shown additional functionality provided by default in the shell environment. For instance, you were shown that it was not necessary to copy-paste/retype full pathnames. You can use a shell variable to reference said pathname.
+MYDATAFOLDER=/mnt/lustre/users/username/data/myinputdata #Full path samtools stats /mnt/lustre/users/username/data/myinputdata/something.bam #Variable samtools stats ${MYDATAFOLDER}/something.bam  This is a very trivial example, but still very useful to keep things tidy.</description>
+    </item>
+    
+    <item>
+      <title>BASH</title>
+      <link>https://thewhyoffry.github.io/bifgeneralguides/bash/_intro/</link>
+      <pubDate>Tue, 31 Oct 2017 08:17:49 +0200</pubDate>
+      
+      <guid>https://thewhyoffry.github.io/bifgeneralguides/bash/_intro/</guid>
+      <description>Bourne Again SHell Simple guides for an awesome shell</description>
+    </item>
+    
+    <item>
+      <title>Welcome</title>
+      <link>https://thewhyoffry.github.io/bifgeneralguides/introduction/welcome/</link>
+      <pubDate>Mon, 30 Oct 2017 11:12:17 +0200</pubDate>
+      
+      <guid>https://thewhyoffry.github.io/bifgeneralguides/introduction/welcome/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
