@@ -13,17 +13,17 @@
     <title>Prepping Phylogenetic Data With BASH :: General BIF guides</title>
     
     
-    <link href="/bifgeneralguides/css/nucleus.css?1509459387" rel="stylesheet">
-    <link href="/bifgeneralguides/css/font-awesome.min.css?1509459387" rel="stylesheet">
-    <link href="/bifgeneralguides/css/hybrid.css?1509459387" rel="stylesheet">
-    <link href="/bifgeneralguides/css/featherlight.min.css?1509459387" rel="stylesheet">
-    <link href="/bifgeneralguides/css/perfect-scrollbar.min.css?1509459387" rel="stylesheet">
-    <link href="/bifgeneralguides/css/horsey.css?1509459387" rel="stylesheet">
-    <link href="/bifgeneralguides/css/theme.css?1509459387" rel="stylesheet">
-    <link href="/bifgeneralguides/css/hugo-theme.css?1509459387" rel="stylesheet">
+    <link href="/bifgeneralguides/css/nucleus.css?1509465003" rel="stylesheet">
+    <link href="/bifgeneralguides/css/font-awesome.min.css?1509465003" rel="stylesheet">
+    <link href="/bifgeneralguides/css/hybrid.css?1509465003" rel="stylesheet">
+    <link href="/bifgeneralguides/css/featherlight.min.css?1509465003" rel="stylesheet">
+    <link href="/bifgeneralguides/css/perfect-scrollbar.min.css?1509465003" rel="stylesheet">
+    <link href="/bifgeneralguides/css/horsey.css?1509465003" rel="stylesheet">
+    <link href="/bifgeneralguides/css/theme.css?1509465003" rel="stylesheet">
+    <link href="/bifgeneralguides/css/hugo-theme.css?1509465003" rel="stylesheet">
     
 
-    <script src="/bifgeneralguides/js/jquery-2.x.min.js?1509459387"></script>
+    <script src="/bifgeneralguides/js/jquery-2.x.min.js?1509465003"></script>
     
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{ 
@@ -68,14 +68,14 @@
     <span data-search-clear=""><i class="fa fa-close"></i></span>
 </div>
 
-<script type="text/javascript" src="/bifgeneralguides/js/lunr.min.js?1509459387"></script>
-<script type="text/javascript" src="/bifgeneralguides/js/horsey.js?1509459387"></script>
+<script type="text/javascript" src="/bifgeneralguides/js/lunr.min.js?1509465003"></script>
+<script type="text/javascript" src="/bifgeneralguides/js/horsey.js?1509465003"></script>
 <script type="text/javascript">
     
         var baseurl = "https:\/\/thewhyoffry.github.io\/bifgeneralguides";
     
 </script>
-<script type="text/javascript" src="/bifgeneralguides/js/search.js?1509459387"></script>
+<script type="text/javascript" src="/bifgeneralguides/js/search.js?1509465003"></script>
 
     
   </div>
@@ -274,7 +274,15 @@
 <li><a href="#manipulating-variables">Manipulating variables</a></li>
 <li><a href="#for-loops">For loops</a></li>
 <li><a href="#how-to-run-this-loop">How to run this loop</a></li>
-<li><a href="#before-we-move-on">Before we move on</a></li>
+<li><a href="#before-we-move-on">Before we move on</a>
+<ul>
+<li><a href="#an-alternative-renaming-scheme">An alternative &ldquo;renaming&rdquo; scheme</a></li>
+</ul></li>
+<li><a href="#something-doesn-t-work">Something doesn&rsquo;t work</a></li>
+</ul></li>
+<li><a href="#an-exercise">An exercise</a>
+<ul>
+<li><a href="#generating-a-concatenated-model-file">Generating a concatenated model file</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -535,6 +543,7 @@ sure I didn&rsquo;t mess up.  The final command would first make a directory wit
 command. The semicolor &ldquo;;&rdquo; indicates that a new command follows it, which is &ldquo;cp&rdquo; in this
 case.</li>
 </ol></li>
+<li>This loop continues until there are no more files to analyze.</li>
 </ol>
 
 <div class="notices warning" ><p>Remember to include the parameters of <em>echo</em> in quotes.  If you remove the quites, the following
@@ -622,6 +631,8 @@ the <code>bash renamescript.bash</code> command. If this doesn&rsquo;t work, try
 
 <h3 id="before-we-move-on">Before we move on</h3>
 
+<h4 id="an-alternative-renaming-scheme">An alternative &ldquo;renaming&rdquo; scheme</h4>
+
 <p>Of course, instead of copying the file as a new filename, we could just make symbolic links.
 Symbolic links act as a placeholder and references to the original filename.  To do it this way, we
 replace the &ldquo;echo&rdquo; line:</p>
@@ -641,6 +652,151 @@ echo &quot;mkdir -p out/${GROUPNAME}; ln -s $(realpath ${file}) out/${FILENAME}&
 <p>The <code>realpath</code> command gives the <em>absolute path</em> of the filename, i.e. something in
 &ldquo;/mnt/user/data/something&rdquo; is just referred to as &ldquo;something&rdquo; by default, while using <code>realpath
 samplename</code> will give you &ldquo;/mnt/user/data/something&rdquo;.</p>
+
+<h3 id="something-doesn-t-work">Something doesn&rsquo;t work</h3>
+
+<p>It happens :-) In this example, I&rsquo;m fairly certain that the main mistakes you&rsquo;d make would be:</p>
+
+<ol>
+<li>Forgetting the difference between <code>$()</code> and <code>${}</code>. The <code>$()</code> means &ldquo;please use the output
+from program X as a value, while the <code>${}</code> means &ldquo;please use the value of the variable between
+<code>{}</code>.</li>
+<li>Forgetting your quotes after &ldquo;echo&rdquo;. See the previous paragraphs.</li>
+<li>Seeing an annoying <code>&gt;</code> that doesn&rsquo;t seem to go away.  Check if your for loop has a <code>do</code> and
+<code>done</code> part.  The <code>&gt;</code> means that BASH is either expecting more input (e.g. type <code>&quot;</code> and
+enter on a line) or that it is still within a &ldquo;block&rdquo; such as an unterminated for loop.</li>
+</ol>
+
+<h2 id="an-exercise">An exercise</h2>
+
+<p>Hopefully you understand, at least in principle, what was discussed in the previous section.  If you
+are unsure about something, read it again. If you still don&rsquo;t understand, then my explanation has
+failed you and you are welcome to do a quick web search on the topic - and please spread the word.</p>
+
+<p>For newcomers and even intermediate users, the following exercise (namesake of the title) may seem a
+bit challenging at first. This is something I had to personally do.  It is quite a fun exercise when
+you get it right. Bioinformatics, like most things in science, is about abstracting a problem and
+then pooling together the necessary tools to reach a goal.  Bear with me, it has something to do
+with phylogenetics, &ndash;phylogenomics more specifically&ndash; (nope, I don&rsquo;t want to lose you already).<br />
+  I will describe the general nature of the problem, so you can see where we&rsquo;re heading with it and then
+give you a task to complete.  For each step, the answers will be hidden to you, but you are allowed
+to sneak a peak. Try to do this only if you are really stuck.</p>
+
+<h3 id="generating-a-concatenated-model-file">Generating a concatenated model file</h3>
+
+<p>Phylogenetics is used to find the relationship between sequences.  A phylogenetic tree might give
+you information on the evolutionary history and/or grouping of sequences.  An example would be using
+hox genes to do large evolutionary classifications.  A phylogeny is based on the topology of a tree
+and the branches.  I won&rsquo;t go into too much detail (and omitting quite a bit in the process), but the branch lengths indicate how &ldquo;far&rdquo; a
+sequence is to the common ancestor of its neighbour.  The sequences together with a model can be
+used to find this optimal branch length and topology.  To do a general comparison between organisms,
+select sequences are used and a combined phylogeny is created.  However, different sequences evolve
+at different rates and according to different substitution models.
+  I have a set of ~1400 sequences for which I have determined the optimal substitution model.  What
+  I need now, is a file that contains the sequence name and the appropriate model.  An example of
+  the output:</p>
+
+<pre><code>100.fas,LG4X
+101.fas,JTT+G
+200.fas,JTT
+</code></pre>
+
+<p>So the output needs to be of a &ldquo;CSV&rdquo; (comma separated value) nature.  In loose terms, a sort of
+spread sheet. The first column needs to have the appropriate FASTA file, while the second column
+will contain the best model for making a phylogenetic inference.</p>
+
+<p>If you look at the <code>model</code> folder in the example data, you will see there are ~1400 files. Each of
+them have a &ldquo;.mod&rdquo; extension.  Within this file, there is a specific line that determines the best
+model for the sequences at hand.  The line we would like to use, is:</p>
+
+<pre><code>The best model according to AIC: JTT
+</code></pre>
+
+<p>To get this line, we can use the <code>grep</code> command.  The <code>grep</code> command will print lines in a file
+matching a pattern you specify.  So if you are in the <code>model</code> folder, you can type:</p>
+
+<pre><code class="language-bash">grep &quot;The best model according to AIC&quot; 100.mod
+</code></pre>
+
+<p>And it will give you the appropriate line in the file.</p>
+
+<p>If you manually look at the files, you may notice that there are similar lines, replacing the &ldquo;AIC&rdquo; part with &ldquo;BIC&rdquo;. We can ignore
+those. If you look at this line, we can see that the part we need to extract is after the string
+(pattern) &ldquo;AIC: &ldquo;.  To get this model, we need to first extract the line from the file with <code>grep</code>
+and then remove the &ldquo;The best model &hellip;. AIC:&rdquo; part. Two tasks:</p>
+
+<ol>
+<li>Extract the line containing &ldquo;The best model &hellip;. &rdquo; from the 100.mod file and assign it to a
+variable named <code>MODELLINE</code></li>
+<li>Remove everyting in the line preceding the model part and assign this to <code>MODEL</code></li>
+</ol>
+
+<div class="expand">
+    <div class="expand-label" style="cursor: pointer;" onclick="$h = $(this);$h.next('div').slideToggle(100,function () {$h.children('i').attr('class',function () {return $h.next('div').is(':visible') ? 'fa fa-chevron-down' : 'fa fa-chevron-right';});});">
+        <i style="font-size:x-small;" class="fa fa-chevron-right"></i>
+        <span>
+        
+    	
+    	Show me
+    	
+    	</span>
+    </div>
+    <div class="expand-content" style="display: none;">
+        <pre><code class="language-bash">#Make sure you are in the &quot;model&quot; directory
+MODELLINE=$(grep &quot;The best model according to AIC&quot; 100.mod)
+MODEL=${MODELLINE#*AIC: } # Don't need the entire string, we know there is only one instance of
+&quot;AIC: &quot;
+</code></pre>
+
+    </div>
+</div>
+
+<p>Great! Now, let&rsquo;s manually assign the value &ldquo;100.mod&rdquo; to the variable <code>MODELFILENAME</code>.</p>
+
+<div class="expand">
+    <div class="expand-label" style="cursor: pointer;" onclick="$h = $(this);$h.next('div').slideToggle(100,function () {$h.children('i').attr('class',function () {return $h.next('div').is(':visible') ? 'fa fa-chevron-down' : 'fa fa-chevron-right';});});">
+        <i style="font-size:x-small;" class="fa fa-chevron-right"></i>
+        <span>
+        
+    	
+    	Show me
+    	
+    	</span>
+    </div>
+    <div class="expand-content" style="display: none;">
+        <pre><code class="language-bash">MODELFILENAME=&quot;100.mod&quot; # or: MODELFILENAME=100.mod 
+</code></pre>
+
+    </div>
+</div>
+
+<p>We need to concatenate (join) these variables using a comma as a separator.  You can look at the
+previous sections to see how to join values of variables together. Assing the variable <code>OUTPUT</code> to
+this concatenated value <em>or</em> use <code>echo</code> to print it out.</p>
+
+<div class="expand">
+    <div class="expand-label" style="cursor: pointer;" onclick="$h = $(this);$h.next('div').slideToggle(100,function () {$h.children('i').attr('class',function () {return $h.next('div').is(':visible') ? 'fa fa-chevron-down' : 'fa fa-chevron-right';});});">
+        <i style="font-size:x-small;" class="fa fa-chevron-right"></i>
+        <span>
+        
+    	
+    	Show me
+    	
+    	</span>
+    </div>
+    <div class="expand-content" style="display: none;">
+        <pre><code class="language-bash"># Assign to variable
+OUTPUT=${MODELFILENAME},${MODEL}
+
+echo ${OUTPUT}
+
+#or
+
+echo &quot;${MODELFILENAME},${MODEL}&quot;
+</code></pre>
+
+    </div>
+</div>
 
 <!-- ### Getting a little more fancy
 
@@ -796,20 +952,20 @@ OK, great. We know the end goal.  Now we have to ask ourselves: what does a FAST
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/bifgeneralguides/js/clipboard.min.js?1509459387"></script>
-    <script src="/bifgeneralguides/js/perfect-scrollbar.min.js?1509459387"></script>
-    <script src="/bifgeneralguides/js/perfect-scrollbar.jquery.min.js?1509459387"></script>
-    <script src="/bifgeneralguides/js/jquery.sticky-kit.min.js?1509459387"></script>
-    <script src="/bifgeneralguides/js/featherlight.min.js?1509459387"></script>
-    <script src="/bifgeneralguides/js/html5shiv-printshiv.min.js?1509459387"></script>
-    <script src="/bifgeneralguides/js/highlight.pack.js?1509459387"></script>
+    <script src="/bifgeneralguides/js/clipboard.min.js?1509465003"></script>
+    <script src="/bifgeneralguides/js/perfect-scrollbar.min.js?1509465003"></script>
+    <script src="/bifgeneralguides/js/perfect-scrollbar.jquery.min.js?1509465003"></script>
+    <script src="/bifgeneralguides/js/jquery.sticky-kit.min.js?1509465003"></script>
+    <script src="/bifgeneralguides/js/featherlight.min.js?1509465003"></script>
+    <script src="/bifgeneralguides/js/html5shiv-printshiv.min.js?1509465003"></script>
+    <script src="/bifgeneralguides/js/highlight.pack.js?1509465003"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/bifgeneralguides/js/modernizr.custom.71422.js?1509459387"></script>
-    <script src="/bifgeneralguides/js/learn.js?1509459387"></script>
-    <script src="/bifgeneralguides/js/hugo-learn.js?1509459387"></script>
+    <script src="/bifgeneralguides/js/modernizr.custom.71422.js?1509465003"></script>
+    <script src="/bifgeneralguides/js/learn.js?1509465003"></script>
+    <script src="/bifgeneralguides/js/hugo-learn.js?1509465003"></script>
 
-    <link href="/bifgeneralguides/mermaid/mermaid.css?1509459387" type="text/css" rel="stylesheet" />
-    <script src="/bifgeneralguides/mermaid/mermaid.js?1509459387"></script>
+    <link href="/bifgeneralguides/mermaid/mermaid.css?1509465003" type="text/css" rel="stylesheet" />
+    <script src="/bifgeneralguides/mermaid/mermaid.js?1509465003"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
