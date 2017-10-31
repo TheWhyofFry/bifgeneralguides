@@ -13,17 +13,17 @@
     <title>Prepping Phylogenetic Data With BASH :: General BIF guides</title>
     
     
-    <link href="/bifgeneralguides/css/nucleus.css?1509465003" rel="stylesheet">
-    <link href="/bifgeneralguides/css/font-awesome.min.css?1509465003" rel="stylesheet">
-    <link href="/bifgeneralguides/css/hybrid.css?1509465003" rel="stylesheet">
-    <link href="/bifgeneralguides/css/featherlight.min.css?1509465003" rel="stylesheet">
-    <link href="/bifgeneralguides/css/perfect-scrollbar.min.css?1509465003" rel="stylesheet">
-    <link href="/bifgeneralguides/css/horsey.css?1509465003" rel="stylesheet">
-    <link href="/bifgeneralguides/css/theme.css?1509465003" rel="stylesheet">
-    <link href="/bifgeneralguides/css/hugo-theme.css?1509465003" rel="stylesheet">
+    <link href="/bifgeneralguides/css/nucleus.css?1509469211" rel="stylesheet">
+    <link href="/bifgeneralguides/css/font-awesome.min.css?1509469211" rel="stylesheet">
+    <link href="/bifgeneralguides/css/hybrid.css?1509469211" rel="stylesheet">
+    <link href="/bifgeneralguides/css/featherlight.min.css?1509469211" rel="stylesheet">
+    <link href="/bifgeneralguides/css/perfect-scrollbar.min.css?1509469211" rel="stylesheet">
+    <link href="/bifgeneralguides/css/horsey.css?1509469211" rel="stylesheet">
+    <link href="/bifgeneralguides/css/theme.css?1509469211" rel="stylesheet">
+    <link href="/bifgeneralguides/css/hugo-theme.css?1509469211" rel="stylesheet">
     
 
-    <script src="/bifgeneralguides/js/jquery-2.x.min.js?1509465003"></script>
+    <script src="/bifgeneralguides/js/jquery-2.x.min.js?1509469211"></script>
     
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{ 
@@ -68,14 +68,14 @@
     <span data-search-clear=""><i class="fa fa-close"></i></span>
 </div>
 
-<script type="text/javascript" src="/bifgeneralguides/js/lunr.min.js?1509465003"></script>
-<script type="text/javascript" src="/bifgeneralguides/js/horsey.js?1509465003"></script>
+<script type="text/javascript" src="/bifgeneralguides/js/lunr.min.js?1509469211"></script>
+<script type="text/javascript" src="/bifgeneralguides/js/horsey.js?1509469211"></script>
 <script type="text/javascript">
     
         var baseurl = "https:\/\/thewhyoffry.github.io\/bifgeneralguides";
     
 </script>
-<script type="text/javascript" src="/bifgeneralguides/js/search.js?1509465003"></script>
+<script type="text/javascript" src="/bifgeneralguides/js/search.js?1509469211"></script>
 
     
   </div>
@@ -709,13 +709,14 @@ will contain the best model for making a phylogenetic inference.</p>
 them have a &ldquo;.mod&rdquo; extension.  Within this file, there is a specific line that determines the best
 model for the sequences at hand.  The line we would like to use, is:</p>
 
-<pre><code>The best model according to AIC: JTT
+<pre><code>Best model according to AIC: JTT
 </code></pre>
 
 <p>To get this line, we can use the <code>grep</code> command.  The <code>grep</code> command will print lines in a file
 matching a pattern you specify.  So if you are in the <code>model</code> folder, you can type:</p>
 
-<pre><code class="language-bash">grep &quot;The best model according to AIC&quot; 100.mod
+<pre><code class="language-bash">grep &quot;Best model according to AIC&quot; 100.mod
+Best model according to AIC: LG+I+G+F
 </code></pre>
 
 <p>And it will give you the appropriate line in the file.</p>
@@ -743,9 +744,13 @@ variable named <code>MODELLINE</code></li>
     </div>
     <div class="expand-content" style="display: none;">
         <pre><code class="language-bash">#Make sure you are in the &quot;model&quot; directory
-MODELLINE=$(grep &quot;The best model according to AIC&quot; 100.mod)
+MODELLINE=$(grep &quot;Best model according to AIC&quot; 100.mod)
 MODEL=${MODELLINE#*AIC: } # Don't need the entire string, we know there is only one instance of
 &quot;AIC: &quot;
+
+echo ${MODEL}
+LG+I+G+F
+
 </code></pre>
 
     </div>
@@ -793,10 +798,97 @@ echo ${OUTPUT}
 #or
 
 echo &quot;${MODELFILENAME},${MODEL}&quot;
+100.mod,LG+I+G+F
 </code></pre>
 
     </div>
 </div>
+
+<p>However, there&rsquo;s a problem here.  The FASTA file corresponding to the model file ends with &ldquo;.fas&rdquo;,
+so you need to remove the suffix of <code>MODELFILENAME</code> and add <code>.fas</code> to it.</p>
+
+<div class="expand">
+    <div class="expand-label" style="cursor: pointer;" onclick="$h = $(this);$h.next('div').slideToggle(100,function () {$h.children('i').attr('class',function () {return $h.next('div').is(':visible') ? 'fa fa-chevron-down' : 'fa fa-chevron-right';});});">
+        <i style="font-size:x-small;" class="fa fa-chevron-right"></i>
+        <span>
+        
+    	
+    	Show me
+    	
+    	</span>
+    </div>
+    <div class="expand-content" style="display: none;">
+        <pre><code class="language-bash">FASTAFILENAME=${MODELFILENAME%%.out}.fas
+
+echo &quot;${FASTAFILENAME},${MODEL}&quot;
+100.fas,LG+I+G+F
+</code></pre>
+
+    </div>
+</div>
+
+<p>Now you have your steps to generate the desired output.  Next, the procedure should be wrapped in a
+for loop.  Make sure you are in the <code>models</code> folder for this.  You need to loop over all the
+<code>.mod</code> files, using <code>MODELFILENAME</code> as the variable to store the filename with each iteration of
+the loop.  You need to save the extracted <code>MODELLINE</code> and then extract the <code>MODEL</code> from this.
+The <code>FASTAFILENAME</code> should be created from <code>MODELFILENAME</code>. The CSV-styled output should be
+produced with &ldquo;echo&rdquo;. Edit a text file called &ldquo;extractmodels.bash&rdquo; (or whatever you like) and put
+your <code>for loop</code> inside.</p>
+
+<div class="expand">
+    <div class="expand-label" style="cursor: pointer;" onclick="$h = $(this);$h.next('div').slideToggle(100,function () {$h.children('i').attr('class',function () {return $h.next('div').is(':visible') ? 'fa fa-chevron-down' : 'fa fa-chevron-right';});});">
+        <i style="font-size:x-small;" class="fa fa-chevron-right"></i>
+        <span>
+        
+    	
+    	Show me
+    	
+    	</span>
+    </div>
+    <div class="expand-content" style="display: none;">
+        <pre><code class="language-bash">for MODELFILENAME in *.mod
+	do 
+		MODELLINE=$(grep &quot;Best model according to AIC&quot; ${MODELFILENAME})
+		
+		MODEL=${MODELLINE#*AIC: }
+
+		FASTAFILENAME=${MODELFILENAME%%.mod}.fas
+
+		echo &quot;${FASTAFILENAME},${MODEL}&quot;
+	done
+
+
+</code></pre>
+
+    </div>
+</div>
+
+<p>When you run the script inside the <code>models</code> folder (if the script is in another folder, change
+your command accordingly). The output should be printed onto the screen.  In order to write this
+output to a file, you might do:</p>
+
+<pre><code class="language-shell">
+bash extractmodels.bash &gt; allmodels.txt
+head allmodels.txt
+
+1000.fas,JTT+I+G+F
+1004.fas,LG+I+G+F
+10064.fas,WAG+I+G
+10075.fas,Dayhoff+I+G
+1008.fas,LG+I+G+F
+10095.fas,JTT+I+G
+100.fas,LG+I+G+F
+1013.fas,LG+I+G+F
+10153.fas,LG+I+G+F
+1015.fas,WAG+I+G
+
+
+</code></pre>
+
+<p>The output of the bash command is redirected by <code>&gt;</code> to a file. Your excercise is now done. There
+are <em><em>many</em></em> more awesome things you can do. Hopefully you would now have more confidence to try :-)</p>
+
+<p>-WS</p>
 
 <!-- ### Getting a little more fancy
 
@@ -952,20 +1044,20 @@ OK, great. We know the end goal.  Now we have to ask ourselves: what does a FAST
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/bifgeneralguides/js/clipboard.min.js?1509465003"></script>
-    <script src="/bifgeneralguides/js/perfect-scrollbar.min.js?1509465003"></script>
-    <script src="/bifgeneralguides/js/perfect-scrollbar.jquery.min.js?1509465003"></script>
-    <script src="/bifgeneralguides/js/jquery.sticky-kit.min.js?1509465003"></script>
-    <script src="/bifgeneralguides/js/featherlight.min.js?1509465003"></script>
-    <script src="/bifgeneralguides/js/html5shiv-printshiv.min.js?1509465003"></script>
-    <script src="/bifgeneralguides/js/highlight.pack.js?1509465003"></script>
+    <script src="/bifgeneralguides/js/clipboard.min.js?1509469211"></script>
+    <script src="/bifgeneralguides/js/perfect-scrollbar.min.js?1509469211"></script>
+    <script src="/bifgeneralguides/js/perfect-scrollbar.jquery.min.js?1509469211"></script>
+    <script src="/bifgeneralguides/js/jquery.sticky-kit.min.js?1509469211"></script>
+    <script src="/bifgeneralguides/js/featherlight.min.js?1509469211"></script>
+    <script src="/bifgeneralguides/js/html5shiv-printshiv.min.js?1509469211"></script>
+    <script src="/bifgeneralguides/js/highlight.pack.js?1509469211"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/bifgeneralguides/js/modernizr.custom.71422.js?1509465003"></script>
-    <script src="/bifgeneralguides/js/learn.js?1509465003"></script>
-    <script src="/bifgeneralguides/js/hugo-learn.js?1509465003"></script>
+    <script src="/bifgeneralguides/js/modernizr.custom.71422.js?1509469211"></script>
+    <script src="/bifgeneralguides/js/learn.js?1509469211"></script>
+    <script src="/bifgeneralguides/js/hugo-learn.js?1509469211"></script>
 
-    <link href="/bifgeneralguides/mermaid/mermaid.css?1509465003" type="text/css" rel="stylesheet" />
-    <script src="/bifgeneralguides/mermaid/mermaid.js?1509465003"></script>
+    <link href="/bifgeneralguides/mermaid/mermaid.css?1509469211" type="text/css" rel="stylesheet" />
+    <script src="/bifgeneralguides/mermaid/mermaid.js?1509469211"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
