@@ -13,17 +13,17 @@
     <title>Prepping Phylogenetic Data With BASH :: General BIF guides</title>
     
     
-    <link href="/bifgeneralguides/css/nucleus.css?1509456219" rel="stylesheet">
-    <link href="/bifgeneralguides/css/font-awesome.min.css?1509456219" rel="stylesheet">
-    <link href="/bifgeneralguides/css/hybrid.css?1509456219" rel="stylesheet">
-    <link href="/bifgeneralguides/css/featherlight.min.css?1509456219" rel="stylesheet">
-    <link href="/bifgeneralguides/css/perfect-scrollbar.min.css?1509456219" rel="stylesheet">
-    <link href="/bifgeneralguides/css/horsey.css?1509456219" rel="stylesheet">
-    <link href="/bifgeneralguides/css/theme.css?1509456219" rel="stylesheet">
-    <link href="/bifgeneralguides/css/hugo-theme.css?1509456219" rel="stylesheet">
+    <link href="/bifgeneralguides/css/nucleus.css?1509459387" rel="stylesheet">
+    <link href="/bifgeneralguides/css/font-awesome.min.css?1509459387" rel="stylesheet">
+    <link href="/bifgeneralguides/css/hybrid.css?1509459387" rel="stylesheet">
+    <link href="/bifgeneralguides/css/featherlight.min.css?1509459387" rel="stylesheet">
+    <link href="/bifgeneralguides/css/perfect-scrollbar.min.css?1509459387" rel="stylesheet">
+    <link href="/bifgeneralguides/css/horsey.css?1509459387" rel="stylesheet">
+    <link href="/bifgeneralguides/css/theme.css?1509459387" rel="stylesheet">
+    <link href="/bifgeneralguides/css/hugo-theme.css?1509459387" rel="stylesheet">
     
 
-    <script src="/bifgeneralguides/js/jquery-2.x.min.js?1509456219"></script>
+    <script src="/bifgeneralguides/js/jquery-2.x.min.js?1509459387"></script>
     
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{ 
@@ -68,14 +68,14 @@
     <span data-search-clear=""><i class="fa fa-close"></i></span>
 </div>
 
-<script type="text/javascript" src="/bifgeneralguides/js/lunr.min.js?1509456219"></script>
-<script type="text/javascript" src="/bifgeneralguides/js/horsey.js?1509456219"></script>
+<script type="text/javascript" src="/bifgeneralguides/js/lunr.min.js?1509459387"></script>
+<script type="text/javascript" src="/bifgeneralguides/js/horsey.js?1509459387"></script>
 <script type="text/javascript">
     
         var baseurl = "https:\/\/thewhyoffry.github.io\/bifgeneralguides";
     
 </script>
-<script type="text/javascript" src="/bifgeneralguides/js/search.js?1509456219"></script>
+<script type="text/javascript" src="/bifgeneralguides/js/search.js?1509459387"></script>
 
     
   </div>
@@ -273,6 +273,8 @@
 <ul>
 <li><a href="#manipulating-variables">Manipulating variables</a></li>
 <li><a href="#for-loops">For loops</a></li>
+<li><a href="#how-to-run-this-loop">How to run this loop</a></li>
+<li><a href="#before-we-move-on">Before we move on</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -489,10 +491,73 @@ for file in *.out
 	done
 </code></pre>
 
-<p>This for loop won&rsquo;t actually copy the files to the folder. It just echoes the command.  It is
-imperative that you do this before doing a task such as mass copying/moving, because you <em>will</em> make
-a mistake. And indeed, this for loop does contain some funky names that include both the sample name
-and some random suffix. We note that there is a rogue dash for some of the samples:</p>
+<p>Let&rsquo;s look at the anatomy of a <code>for loop</code>:</p>
+
+<ol>
+<li>The first line of the for loop here sets up what to loop through and where to store the value
+after each iteration.  So for each <code>file</code> in <code>*.out</code> means for each <em>filename</em> matching the
+pattern <code>*.out</code>, i.e. all files ending with <code>*.out</code> in the current directory.  An equivalent
+command would be <code>for file in $(ls *.out)</code>. Each filename will then be passed to <code>file</code>.</li>
+<li>The <code>do</code> and <code>done</code> words mark the beginning and end of the content part of the loop. And
+everything between the two words will be executed as long as there are more <code>*.out</code> files to
+go through.<br /></li>
+<li>Disregarding the content between the <code>do</code> and <code>done</code> parts, if this loop were to run, and
+the files <code>one.out</code>, <code>two.out</code> and <code>three.out</code> existed in the current folder, the value of
+<code>file</code> would be <code>one.out</code> first, and when the loop restarts, <code>two.out</code> and finally
+<code>three.out</code> after which the loop will end. And code (if any) below the for loop will be
+executed.</li>
+<li>The main content of the loop:
+
+<ol>
+<li><code>FILENAME=$(basename ${file})</code> - In this example, this step is not really necessary,
+but we would rather like the <em>basename</em> of a file. The <em>basename</em> is the filename without
+a prefixed path, e.g. <code>basename /mnt/your/file.txt</code> becomes <code>file.txt</code>. By using
+round brackets and a <code>$</code>, the output of the basename command is then stored in the
+FILENAME variable.</li>
+<li><code>GROUPNAME=${FILENAME%%-*}</code> - As mentioned before, we would like the first part of the
+filename to be used as the assigned group. The <code>%%</code> means remove everything, including
+the pattern following <code>%%</code>, i.e. the first occurrence of <code>-</code> up to the end of the
+string. So &ldquo;0123-12312_&hellip;.&rdquo; becomes &ldquo;0123&rdquo;, &ldquo;ABCDEF-12345-6789&rdquo; becomes &ldquo;ABCDEF&rdquo; and so
+on. This search is performed left to right, so it will greedily (as denoted by <code>%%</code>)
+remove the pattern matched up until the last match.</li>
+<li><code>SUFFIX=${FILENAME#*-}</code> - Remove the <em>group name</em> prefix from the filename. This
+search is performed from left to right, and will only remove up to the first occurrence
+of the pattern.  In this case, &ldquo;ABCDEF-12345-6789&rdquo; will become &ldquo;12345-6789&rdquo;.  How would
+this change if the pattern matching was done greedily, i.e. &ldquo;${FILENAME##*-}&ldquo;?</li>
+<li><code>SAMPLE=${SUFFIX%%_*}</code> - As for group name, remove everything after the sample name part.</li>
+<li><code>FINALNAME=${GROUPNAME}/${SAMPLE}.txt</code> - Concatenate the <em>group name</em> and the <em>sample
+name</em>.  This is what our final name should look like.  It will be put under the <em>group
+name</em> path with the <em>sample name</em> as the final filename.</li>
+<li><code>echo &quot;mkdir -p out/${GROUPNAME}; cp ${file} out/${FINALNAME}&quot;</code> - This command won&rsquo;t
+actuall make the path and copy the file name to its new name.  It will only print the
+command to screen.  Personally, I do this before actually executing the command to make
+sure I didn&rsquo;t mess up.  The final command would first make a directory with the &ldquo;mkdir&rdquo;
+command. The semicolor &ldquo;;&rdquo; indicates that a new command follows it, which is &ldquo;cp&rdquo; in this
+case.</li>
+</ol></li>
+</ol>
+
+<div class="notices warning" ><p>Remember to include the parameters of <em>echo</em> in quotes.  If you remove the quites, the following
+will happen (using the filename &ldquo;036-2012P_S1.out&rdquo; as an example):</p>
+
+<blockquote>
+<pre><code>echo mkdir -p out/036
+mkdir -p out/036
+</code></pre>
+
+<pre><code>cp 036-2012P_S1.out out/2012P.txt
+No such file: out (or something similar)
+</code></pre>
+</blockquote>
+
+<p>This is because the &ldquo;;&rdquo; will tell bash that the current command (echo) ends here and that a new
+command is executed.  Putting everything in quotes ensures that the entire line is only printed to
+screen.</p>
+</div>
+
+
+<p>It is important to make sure that the command you executed works well.  Indeed, if we run this loop,
+we&rsquo;ll notice the following:</p>
 
 <pre><code>mkdir -p out/568; cp 568-2001-0_S89.out out/568/2001-0.txt
                                                    ^^^
@@ -536,9 +601,46 @@ mkdir -p out/093; cp 093-2012-0_S63.out out/093/2012.txt
 mkdir -p out/093; cp 093-2012P_S12.out out/093/2012P.txt
 mkdir -p out/093; cp 093-2024-0_S64.out out/093/2024.txt
 mkdir -p out/093; cp 093-2024P_S13.out out/093/2024P.txt
-mkdir -p out/093; cp 093-2036P_S14.out out/093/2036P.txt
-mkdir -p out/102; cp 102-2002-0_S65.out out/102/2002.txt
 </code></pre>
+
+<h3 id="how-to-run-this-loop">How to run this loop</h3>
+
+<p>You can enter the loop in a terminal as-is.  But it is generally better to put everything into a
+file, say <code>renamescript.bash</code> and then execute it with <code>bash renamescript.bash</code>.  As an aside,
+you can add the following to the very beginning of the file:</p>
+
+<pre><code>#!/bin/bash
+</code></pre>
+
+<p>And then, in the folder containing the script, type:</p>
+
+<pre><code>chmod a+x renamescript.bash
+</code></pre>
+
+<p>However, if you&rsquo;re using git bash, I&rsquo;m unsure what the behaviour would be, so perhaps better to use
+the <code>bash renamescript.bash</code> command. If this doesn&rsquo;t work, try <code>source renamescript.bash</code>.</p>
+
+<h3 id="before-we-move-on">Before we move on</h3>
+
+<p>Of course, instead of copying the file as a new filename, we could just make symbolic links.
+Symbolic links act as a placeholder and references to the original filename.  To do it this way, we
+replace the &ldquo;echo&rdquo; line:</p>
+
+<pre><code>echo &quot;mkdir -p out/${GROUPNAME}; cp ${file} out/${FILENAME}&quot;
+
+#Replace this with:
+
+echo &quot;mkdir -p out/${GROUPNAME}; ln -s ${file} out/${FILENAME}&quot;
+
+#If the original files won't be moved, we can use absolute paths, since these will give relative
+paths:
+
+echo &quot;mkdir -p out/${GROUPNAME}; ln -s $(realpath ${file}) out/${FILENAME}&quot;
+</code></pre>
+
+<p>The <code>realpath</code> command gives the <em>absolute path</em> of the filename, i.e. something in
+&ldquo;/mnt/user/data/something&rdquo; is just referred to as &ldquo;something&rdquo; by default, while using <code>realpath
+samplename</code> will give you &ldquo;/mnt/user/data/something&rdquo;.</p>
 
 <!-- ### Getting a little more fancy
 
@@ -694,20 +796,20 @@ OK, great. We know the end goal.  Now we have to ask ourselves: what does a FAST
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/bifgeneralguides/js/clipboard.min.js?1509456219"></script>
-    <script src="/bifgeneralguides/js/perfect-scrollbar.min.js?1509456219"></script>
-    <script src="/bifgeneralguides/js/perfect-scrollbar.jquery.min.js?1509456219"></script>
-    <script src="/bifgeneralguides/js/jquery.sticky-kit.min.js?1509456219"></script>
-    <script src="/bifgeneralguides/js/featherlight.min.js?1509456219"></script>
-    <script src="/bifgeneralguides/js/html5shiv-printshiv.min.js?1509456219"></script>
-    <script src="/bifgeneralguides/js/highlight.pack.js?1509456219"></script>
+    <script src="/bifgeneralguides/js/clipboard.min.js?1509459387"></script>
+    <script src="/bifgeneralguides/js/perfect-scrollbar.min.js?1509459387"></script>
+    <script src="/bifgeneralguides/js/perfect-scrollbar.jquery.min.js?1509459387"></script>
+    <script src="/bifgeneralguides/js/jquery.sticky-kit.min.js?1509459387"></script>
+    <script src="/bifgeneralguides/js/featherlight.min.js?1509459387"></script>
+    <script src="/bifgeneralguides/js/html5shiv-printshiv.min.js?1509459387"></script>
+    <script src="/bifgeneralguides/js/highlight.pack.js?1509459387"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/bifgeneralguides/js/modernizr.custom.71422.js?1509456219"></script>
-    <script src="/bifgeneralguides/js/learn.js?1509456219"></script>
-    <script src="/bifgeneralguides/js/hugo-learn.js?1509456219"></script>
+    <script src="/bifgeneralguides/js/modernizr.custom.71422.js?1509459387"></script>
+    <script src="/bifgeneralguides/js/learn.js?1509459387"></script>
+    <script src="/bifgeneralguides/js/hugo-learn.js?1509459387"></script>
 
-    <link href="/bifgeneralguides/mermaid/mermaid.css?1509456219" type="text/css" rel="stylesheet" />
-    <script src="/bifgeneralguides/mermaid/mermaid.js?1509456219"></script>
+    <link href="/bifgeneralguides/mermaid/mermaid.css?1509459387" type="text/css" rel="stylesheet" />
+    <script src="/bifgeneralguides/mermaid/mermaid.js?1509459387"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
