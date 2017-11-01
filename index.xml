@@ -17,9 +17,7 @@
       <pubDate>Tue, 31 Oct 2017 08:22:40 +0200</pubDate>
       
       <guid>https://thewhyoffry.github.io/bifgeneralguides/bash/bashphylo/</guid>
-      <description>Introduction General usage of shell environments are restricted to executing simple commands to complete tasks. So
-Some of the previous demonstrations have shown additional functionality provided by default in the shell environment. For instance, you were shown that it was not necessary to copy-paste/retype full pathnames. You can use a shell variable to reference said pathname.
-MYDATAFOLDER=/mnt/lustre/users/username/data/myinputdata #Full path samtools stats /mnt/lustre/users/username/data/myinputdata/something.bam #Variable samtools stats ${MYDATAFOLDER}/something.bam  This is a very trivial example, but still very useful to keep things tidy.</description>
+      <description>Introduction BASH provides more functionality than merely executing programs. BASH (and other shell environments) have advanced features that allow you to interact with programs better, automate tasks and clean up complicated execution pipelines. You will come across some scripts that take this functionality to the max. Some of the previous demonstrations have shown additional functionality provided by default in the shell environment. For instance, you were shown that it was not necessary to copy-paste/retype full pathnames.</description>
     </item>
     
     <item>

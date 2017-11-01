@@ -13,17 +13,17 @@
     <title>Prepping Phylogenetic Data With BASH :: General BIF guides</title>
     
     
-    <link href="/bifgeneralguides/css/nucleus.css?1509469211" rel="stylesheet">
-    <link href="/bifgeneralguides/css/font-awesome.min.css?1509469211" rel="stylesheet">
-    <link href="/bifgeneralguides/css/hybrid.css?1509469211" rel="stylesheet">
-    <link href="/bifgeneralguides/css/featherlight.min.css?1509469211" rel="stylesheet">
-    <link href="/bifgeneralguides/css/perfect-scrollbar.min.css?1509469211" rel="stylesheet">
-    <link href="/bifgeneralguides/css/horsey.css?1509469211" rel="stylesheet">
-    <link href="/bifgeneralguides/css/theme.css?1509469211" rel="stylesheet">
-    <link href="/bifgeneralguides/css/hugo-theme.css?1509469211" rel="stylesheet">
+    <link href="/bifgeneralguides/css/nucleus.css?1509514048" rel="stylesheet">
+    <link href="/bifgeneralguides/css/font-awesome.min.css?1509514048" rel="stylesheet">
+    <link href="/bifgeneralguides/css/hybrid.css?1509514048" rel="stylesheet">
+    <link href="/bifgeneralguides/css/featherlight.min.css?1509514048" rel="stylesheet">
+    <link href="/bifgeneralguides/css/perfect-scrollbar.min.css?1509514048" rel="stylesheet">
+    <link href="/bifgeneralguides/css/horsey.css?1509514048" rel="stylesheet">
+    <link href="/bifgeneralguides/css/theme.css?1509514048" rel="stylesheet">
+    <link href="/bifgeneralguides/css/hugo-theme.css?1509514048" rel="stylesheet">
     
 
-    <script src="/bifgeneralguides/js/jquery-2.x.min.js?1509469211"></script>
+    <script src="/bifgeneralguides/js/jquery-2.x.min.js?1509514048"></script>
     
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{ 
@@ -68,14 +68,14 @@
     <span data-search-clear=""><i class="fa fa-close"></i></span>
 </div>
 
-<script type="text/javascript" src="/bifgeneralguides/js/lunr.min.js?1509469211"></script>
-<script type="text/javascript" src="/bifgeneralguides/js/horsey.js?1509469211"></script>
+<script type="text/javascript" src="/bifgeneralguides/js/lunr.min.js?1509514048"></script>
+<script type="text/javascript" src="/bifgeneralguides/js/horsey.js?1509514048"></script>
 <script type="text/javascript">
     
         var baseurl = "https:\/\/thewhyoffry.github.io\/bifgeneralguides";
     
 </script>
-<script type="text/javascript" src="/bifgeneralguides/js/search.js?1509469211"></script>
+<script type="text/javascript" src="/bifgeneralguides/js/search.js?1509514048"></script>
 
     
   </div>
@@ -269,9 +269,10 @@
 <ul>
 <li>
 <ul>
-<li><a href="#introduction">Introduction</a>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#manipulating-variables">Manipulating variables</a>
 <ul>
-<li><a href="#manipulating-variables">Manipulating variables</a></li>
+<li><a href="#an-example-of-using-bash-to-rename-organize-files">An example of using BASH to rename/organize files</a></li>
 <li><a href="#for-loops">For loops</a></li>
 <li><a href="#how-to-run-this-loop">How to run this loop</a></li>
 <li><a href="#before-we-move-on">Before we move on</a>
@@ -307,9 +308,11 @@
 
 <h2 id="introduction">Introduction</h2>
 
-<p>General usage of shell environments are restricted to executing simple commands to complete tasks. So</p>
-
-<p>Some of the previous demonstrations have shown additional functionality provided by default in the
+<p>BASH provides more functionality than merely executing programs.  BASH (and other shell
+environments) have advanced features that allow you to interact with programs better, automate tasks
+and clean up complicated execution pipelines. You will come across some scripts that take this
+functionality to the max.
+  Some of the previous demonstrations have shown additional functionality provided by default in the
 shell environment. For instance, you were shown that it was not necessary to copy-paste/retype full
 pathnames. You can use a shell variable to reference said pathname.</p>
 
@@ -324,7 +327,8 @@ samtools stats /mnt/lustre/users/username/data/myinputdata/something.bam
 samtools stats ${MYDATAFOLDER}/something.bam
 </code></pre>
 
-<p>This is a very trivial example, but still very useful to keep things tidy.  It&rsquo;s easy to get lost.
+<p>This is a very trivial example, but still very useful to keep things tidy.  It&rsquo;s easy to get lost
+within your own commands.
 Besides aesthetics, the use of a <em>variable</em> is exceptionally useful.  We can use them to store
 output from another command. Let&rsquo;s say you want to keep a collection of all the fasta files in a
 current directory.</p>
@@ -348,7 +352,25 @@ also use backicks, <code>`</code>, but this is deprecated in favour of <code>$()
 you type <code>ls *.fasta</code> is now <em>redirected</em> to the variable when you encapsulate as<code>$(ls
 *.fasta)</code>.</p>
 
-<h3 id="manipulating-variables">Manipulating variables</h3>
+<div class="notices info" ><p>For the subsequent sections, you would need the data files provided <a href="https://github.com/TheWhyofFry/bifgeneralguides/raw/master/data/bashphylo.zip">here</a>.
+The data file contains two folders, <code>samples</code> and <code>models</code> that will be used as reference for
+the subsequent parts.  If you are working on Windows, I strongly recommend you getting the Windows
+version of <code>git</code>.  Git is a content manager and something worth while learning.  No doubt you
+would use it sometime in the future.  Because of the nature of the Windows terminals (command prompt
+and powershell) most/all of what you&rsquo;ll see in the rest of the document won&rsquo;t be able to be run in
+the respective terminals.  For more advanced users, you can check out the <a href="https://msdn.microsoft.com/en-us/commandline/wsl/about">Windows Subsystem for
+Linux</a>. After installation of BASH, you will
+be able to open up a BASH shell in any folder of your chosing by opening up the context menu
+(right-click) in a file browser.  There should also be a shortcut in the Start menu.  I&rsquo;m not 100%
+sure of this.  I haven&rsquo;t used Windows in a while.</p>
+
+<p>Whatever system you&rsquo;re using, make sure to remember where you extracted the <code>bashphylo.zip</code>
+archive. The instructions in the subsequent sections will let you know where you have to navigate
+to.  Most of the BASH commands you have learned are available from within the git-bash terminal.</p>
+</div>
+
+
+<h2 id="manipulating-variables">Manipulating variables</h2>
 
 <p>Variables are by definition not static entities and can easily be changed to something else.
 Indeed, by using the expression <code>${MYDATAFOLDER}/something.bam</code>, you are creating a new (unnnamed)
@@ -356,6 +378,20 @@ variable that combines the value of <code>MYDATAFOLDER</code> and <code>/somethi
 be manipulated in interesting ways.  A lot of time  when dealing with many data files, you&rsquo;ll sit
 with a situation where manual grouping of data according to sample/group/etc becomes really
 difficult.</p>
+
+<div class="notices tip" ><p>You the following files are in the &ldquo;samples&rdquo; folder. While the are all empty files, the guide
+focuses more on the filenames rather than content.  To navigate to this folder, you should be able
+to either open up the bash/git-bash terminal and navigate to the &ldquo;samples&rdquo; subdirectory.</p>
+
+<pre><code class="language-bash">
+#Where [pathwhereyouextracted] is replaced by the path where you extracted the archive
+cd [pathwhereyouextracted]/bashphylo/samples  # The root folder of the archive is &quot;bashphylo
+
+</code></pre>
+</div>
+
+
+<h3 id="an-example-of-using-bash-to-rename-organize-files">An example of using BASH to rename/organize files</h3>
 
 <p>Take a look at the following filenames:</p>
 
@@ -434,23 +470,35 @@ echo ${GROUPNAME}
 </code></pre>
 
 <p>The <code>%</code> operator tell BASH to remove everything after and including that which matches
-<code>[pattern]</code>.  The pattern in this case is the first dash and <em>everything</em> after that. If you were
-to play around with the command a bit, you&rsquo;d see the following:</p>
+<code>[pattern]</code>. A single <code>%</code> will remove up to the <em>last</em> occurrence of the pattern.<br />
+The pattern in this case is prepended by <code>%%</code>. Two <code>%%</code> means that it will remove
+everything up to the <em>first</em> occurrence of the match. If you were to play around with
+the command a bit, you&rsquo;d see the following:</p>
 
-<pre><code>echo ${FILENAME%1*} # Remove everything after the last occurrence of &quot;1&quot;
+<pre><code>echo ${FILENAME}
+036-2012P_S1.out
+
+echo ${FILENAME%1*} # Remove everything after the last occurrence of &quot;1&quot;
 036-2012P_S
 
 echo ${FILENAME%%1*} # Remove everything after the first occurrence of &quot;1&quot;
+036-20
 </code></pre>
 
-<p>The command may seem a little confusing, but fret not.  The search for a pattern actually starts
-from the end of the line.  A single <code>%</code> indicates that everything gets deleted from the end of the
-string up to the <em>first</em> match.  A double <code>%%</code> indicates that everything gets deleted up to the
-final match starting from the end of the line.</p>
+<p>We can see  that with a pattern matching &ldquo;1&rdquo;, the first occurrence of &ldquo;1&rdquo; plus the stuff
+to to the end are removed. When including two <code>%%</code>, the last occurrence of &ldquo;1&rdquo; up to the end is
+removed.  Remember, this search happens from <em>right</em> to <em>left</em>, so the first occurrence of a pattern
+would be the one closest to the end of the line.</p>
 
-<p>So now we know how to generate the group name.  Next, we need to extract the sample name.  We need
+<p>Now we know how to generate the group name.  Next, we need to extract the sample name.  We need
 to remove the <code>group prefix</code> and everything from the <code>sample id</code> onward.  Then add the <code>.txt</code>
-extension.</p>
+extension.  To aid you, let&rsquo;s look at the original format of the filename:</p>
+
+<pre><code>  036  -  2012P _   S1     .out
+(group)-(sample)_(sampleid).(ext)
+</code></pre>
+
+<p>The following commands will allow us to extact the &ldquo;sample&rdquo; part:</p>
 
 <pre><code class="language-bash">
 SUFFIX=${FILENAME#*-}
@@ -464,10 +512,12 @@ echo ${SAMPLE}
 
 </code></pre>
 
-<p>So the <code>#</code> operator removes everything before and including a match.  The example above removed
-everything up to and including the first &ldquo;-&rdquo;.  However, we still need to remove the trailing bits,
+<p>The <code>#</code> operator removes everything before and including a match.  This works similarly to <code>%</code>,
+in that <code>##</code> works in a greedy fashion.  Importantly, this search happens from <em>left</em> to <em>right</em>
+The example above removed everything up to and including the first &ldquo;-&rdquo;.  However, we still need to remove the trailing bits,
 so the following command assigns the <code>SAMPLE</code> variable as the <code>SUFFIX</code> variable minus the pesky
-suffix, i.e. <code>_S1.out</code>.</p>
+suffix, i.e. <code>_S1.out</code>. You are allowed to replace <code>SUFFIX</code> with sample and just reassign the
+value of <code>SAMPLE</code> to <code>SAMPLE</code>.  Variables are allowed to overwrite their own values.</p>
 
 <p>Finally, we can construct the desired filename:</p>
 
@@ -888,6 +938,13 @@ head allmodels.txt
 <p>The output of the bash command is redirected by <code>&gt;</code> to a file. Your excercise is now done. There
 are <em><em>many</em></em> more awesome things you can do. Hopefully you would now have more confidence to try :-)</p>
 
+<p>Something you can do on your own, is to change the output with the main model, i.e. remove
+everything after the first <code>+</code>. For example:</p>
+
+<pre><code>1000.fas,JTT+I+G+F --&gt; 1000.fas,JTT
+
+</code></pre>
+
 <p>-WS</p>
 
 <!-- ### Getting a little more fancy
@@ -1044,20 +1101,20 @@ OK, great. We know the end goal.  Now we have to ask ourselves: what does a FAST
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/bifgeneralguides/js/clipboard.min.js?1509469211"></script>
-    <script src="/bifgeneralguides/js/perfect-scrollbar.min.js?1509469211"></script>
-    <script src="/bifgeneralguides/js/perfect-scrollbar.jquery.min.js?1509469211"></script>
-    <script src="/bifgeneralguides/js/jquery.sticky-kit.min.js?1509469211"></script>
-    <script src="/bifgeneralguides/js/featherlight.min.js?1509469211"></script>
-    <script src="/bifgeneralguides/js/html5shiv-printshiv.min.js?1509469211"></script>
-    <script src="/bifgeneralguides/js/highlight.pack.js?1509469211"></script>
+    <script src="/bifgeneralguides/js/clipboard.min.js?1509514048"></script>
+    <script src="/bifgeneralguides/js/perfect-scrollbar.min.js?1509514048"></script>
+    <script src="/bifgeneralguides/js/perfect-scrollbar.jquery.min.js?1509514048"></script>
+    <script src="/bifgeneralguides/js/jquery.sticky-kit.min.js?1509514048"></script>
+    <script src="/bifgeneralguides/js/featherlight.min.js?1509514048"></script>
+    <script src="/bifgeneralguides/js/html5shiv-printshiv.min.js?1509514048"></script>
+    <script src="/bifgeneralguides/js/highlight.pack.js?1509514048"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/bifgeneralguides/js/modernizr.custom.71422.js?1509469211"></script>
-    <script src="/bifgeneralguides/js/learn.js?1509469211"></script>
-    <script src="/bifgeneralguides/js/hugo-learn.js?1509469211"></script>
+    <script src="/bifgeneralguides/js/modernizr.custom.71422.js?1509514048"></script>
+    <script src="/bifgeneralguides/js/learn.js?1509514048"></script>
+    <script src="/bifgeneralguides/js/hugo-learn.js?1509514048"></script>
 
-    <link href="/bifgeneralguides/mermaid/mermaid.css?1509469211" type="text/css" rel="stylesheet" />
-    <script src="/bifgeneralguides/mermaid/mermaid.js?1509469211"></script>
+    <link href="/bifgeneralguides/mermaid/mermaid.css?1509514048" type="text/css" rel="stylesheet" />
+    <script src="/bifgeneralguides/mermaid/mermaid.js?1509514048"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
